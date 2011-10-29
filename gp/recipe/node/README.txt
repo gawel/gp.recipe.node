@@ -19,6 +19,9 @@ npms
 scripts
     a list of scripts
 
+node-path
+    a list of extra directory to add to NODE_PATH
+
 
 Example usage
 =============
