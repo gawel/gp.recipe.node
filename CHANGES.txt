@@ -1,5 +1,5 @@
-0.1 (xxxx-xx-xx)
-----------------
+0.1 
+===
 
 - Created recipe with ZopeSkel
   [Gael Pasgrimaud]
