@@ -39,7 +39,7 @@ class Recipe(object):
         cmd = Cmd(self.buildout, self.name, options)
         if not os.path.isfile(os.path.join(node_bin, 'npm')):
             options['cmds'] = ('export PATH=%s:$PATH;'
-                               'curl http://npmjs.org/install.sh|clean=yes sh'
+                               'curl https://npmjs.org/install.sh|clean=yes sh'
                               ) % os.path.dirname(node_binary)
             print options['cmds']
             cmd.install()
