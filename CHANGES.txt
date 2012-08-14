@@ -1,4 +1,10 @@
-0.1 
+0.3
+===
+
+- Change npm install script location
+  [Ross Pfahler]
+
+0.1
 ===
 
 - Created recipe with ZopeSkel
