@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 """Recipe node"""
-from zc.recipe.cmmi import Recipe as Cmmi
-from collective.recipe.cmd import Cmd
-from zc.recipe.egg import Scripts
-from glob import glob
+import subprocess
 import os
+
 
 class Recipe(object):
     """zc.buildout recipe"""
@@ -14,10 +12,8 @@ class Recipe(object):
         if 'url' not in options:
             options['url'] = 'http://nodejs.org/dist/node-v0.4.12.tar.gz'
 
-
     def install(self):
         """Installer"""
-        pwd = os.getcwd()
         options = self.options
         parts = self.buildout['buildout']['parts-directory']
         name = options['url'].split('/')[-1].replace('.tar.gz', '')
@@ -29,6 +25,7 @@ class Recipe(object):
         node_bin = os.path.dirname(node_binary)
 
         if not os.path.isfile(node_binary):
+            from zc.recipe.cmmi import Recipe as Cmmi
             options['environment'] = 'PYTHONPATH=tools:deps/v8/tools'
             node = Cmmi(self.buildout, name, options)
             node.install()
@@ -36,28 +33,27 @@ class Recipe(object):
         options['on_install'] = 'true'
         options['on_update'] = 'true'
 
-        cmd = Cmd(self.buildout, self.name, options)
         if not os.path.isfile(os.path.join(node_bin, 'npm')):
-            options['cmds'] = ('export PATH=%s:$PATH;'
-                               'curl https://npmjs.org/install.sh|clean=yes sh'
-                              ) % os.path.dirname(node_binary)
-            print options['cmds']
-            cmd.install()
+            p = subprocess.Popen((
+                    'curl -sk https://npmjs.org/install.sh > install.sh&&'
+                    'PATH=%s:$PATH '
+                    'clean=yes sh install.sh&&rm install.sh'
+                              ) % (node_bin,), shell=True)
+            p.wait()
 
-        scripts = [script.strip() for script in options['scripts'].split() if script.strip()]
+        scripts = [script.strip() for script in options['scripts'].split() \
+                                                            if script.strip()]
 
         npms = options.get('npms', '')
         if npms:
-            npms = ' '.join([npm.strip() for npm in npms.split() if npm.strip()])
-            options['cmds'] = ('export HOME=%(node_dir)s;'
+            npms = ' '.join([npm.strip() for npm in npms.split() \
+                                                            if npm.strip()])
+            p = subprocess.Popen(('export HOME=%(node_dir)s;'
                                'export PATH=%(node_bin)s:$PATH;'
                                'echo "prefix=$HOME" > $HOME/.npmrc;'
                                '%(node_bin)s/npm install -g %(npms)s'
-                              ) % locals()
-            print options['cmds']
-            cmd.install()
-
-            bin_dir = os.path.join(self.buildout['buildout']['bin-directory'])
+                              ) % locals(), shell=True)
+            p.wait()
 
             for script in scripts:
                 if script in ['node']:
@@ -80,7 +76,8 @@ class Recipe(object):
         node_path = options.get('node-path', '').split()
         node_path.insert(0, os.path.join(node_dir, 'lib', 'node_modules'))
         node_path = ':'.join(node_path)
-        options['initialization'] = 'import os;\nos.environ["NODE_PATH"] = %r' % node_path
+        options['initialization'] = \
+                        'import os;\nos.environ["NODE_PATH"] = %r' % node_path
 
         options['eggs'] = 'gp.recipe.node'
         options['arguments'] = '%r, (%r, %r), sys.argv[0]' % (
@@ -91,8 +88,8 @@ class Recipe(object):
         options['entry-points'] = '\n'.join([
             '%s=gp.recipe.node.script:main' % s for s in scripts
             ])
+        from zc.recipe.egg import Scripts
         rscripts = Scripts(self.buildout, self.name, options)
         return rscripts.install()
 
     update = install
-

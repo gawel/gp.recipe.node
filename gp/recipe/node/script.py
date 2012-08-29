@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-import subprocess
+
 
 def main(binary, dirnames, filename):
     script_name = os.path.basename(filename)
@@ -12,7 +12,5 @@ def main(binary, dirnames, filename):
             filename = os.path.join(dirname, script_name)
             if os.path.isfile(filename):
                 script = [binary, filename]
-    subprocess.Popen(script+sys.argv[1:],
-                     stdout=sys.stdout,
-                     stderr=sys.stderr).wait()
-
+    args = script + sys.argv[1:]
+    os.execv(args[0], args[1:])
