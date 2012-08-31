@@ -13,4 +13,4 @@ def main(binary, dirnames, filename):
             if os.path.isfile(filename):
                 script = [binary, filename]
     args = script + sys.argv[1:]
-    os.execv(args[0], args[1:])
+    os.execve(args[0], args, os.environ)
