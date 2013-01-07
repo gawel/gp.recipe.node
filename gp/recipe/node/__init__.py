@@ -92,4 +92,5 @@ class Recipe(object):
         rscripts = Scripts(self.buildout, self.name, options)
         return rscripts.install()
 
-    update = install
+    def update(self):
+        pass
