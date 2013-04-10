@@ -35,24 +35,24 @@ class Recipe(object):
 
         if not os.path.isfile(os.path.join(node_bin, 'npm')):
             p = subprocess.Popen((
-                    'curl -sk https://npmjs.org/install.sh > install.sh&&'
-                    'PATH=%s:$PATH '
-                    'clean=yes sh install.sh&&rm install.sh'
-                              ) % (node_bin,), shell=True)
+                'curl -sk https://npmjs.org/install.sh > install.sh&&'
+                'PATH=%s:$PATH '
+                'clean=yes sh install.sh&&rm install.sh') % (node_bin,),
+                shell=True)
             p.wait()
 
-        scripts = [script.strip() for script in options['scripts'].split() \
-                                                            if script.strip()]
+        scripts = [script.strip() for script in options['scripts'].split()
+                   if script.strip()]
 
         npms = options.get('npms', '')
         if npms:
-            npms = ' '.join([npm.strip() for npm in npms.split() \
-                                                            if npm.strip()])
-            p = subprocess.Popen(('export HOME=%(node_dir)s;'
-                               'export PATH=%(node_bin)s:$PATH;'
-                               'echo "prefix=$HOME" > $HOME/.npmrc;'
-                               '%(node_bin)s/npm install -g %(npms)s'
-                              ) % locals(), shell=True)
+            npms = ' '.join([npm.strip() for npm in npms.split()
+                             if npm.strip()])
+            p = subprocess.Popen((
+                'export HOME=%(node_dir)s;'
+                'export PATH=%(node_bin)s:$PATH;'
+                'echo "prefix=$HOME" > $HOME/.npmrc;'
+                '%(node_bin)s/npm install -g %(npms)s') % locals(), shell=True)
             p.wait()
 
             for script in scripts:
@@ -76,18 +76,39 @@ class Recipe(object):
         node_path = options.get('node-path', '').split()
         node_path.insert(0, os.path.join(node_dir, 'lib', 'node_modules'))
         node_path = ':'.join(node_path)
-        options['initialization'] = \
-                        'import os;\nos.environ["NODE_PATH"] = %r' % node_path
+        options['initialization'] = (
+            'import os;\nos.environ["NODE_PATH"] = %r' % node_path
+        )
+
+        paths = [os.path.join(node_dir, 'bin'), node_bin]
+        all_scripts = []
+        for p in paths:
+            all_scripts.extend(os.listdir(p))
+
+        typos = []
+        for script in scripts:
+            if script not in all_scripts:
+                typos.append(script)
+        if typos:
+            import zc.buildout
+            typos = ', '.join([repr(s) for s in typos])
+            all_scripts = [repr(s) for s in all_scripts]
+            all_scripts = ', '.join(sorted(all_scripts))
+            raise zc.buildout.UserError((
+                'Script(s) {0} not found in {1[0]};{1[1]}.\n'
+                'You may have a typo in your buildout config.\n'
+                'Available scripts are: {2}'
+            ).format(typos, paths, all_scripts))
 
         options['eggs'] = 'gp.recipe.node'
         options['arguments'] = '%r, (%r, %r), sys.argv[0]' % (
-                                node_binary,
-                                os.path.join(node_dir, 'bin'),
-                                node_bin,
-                             )
+            node_binary,
+            os.path.join(node_dir, 'bin'),
+            node_bin,
+        )
         options['entry-points'] = '\n'.join([
             '%s=gp.recipe.node.script:main' % s for s in scripts
-            ])
+        ])
         from zc.recipe.egg import Scripts
         rscripts = Scripts(self.buildout, self.name, options)
         return rscripts.install()
