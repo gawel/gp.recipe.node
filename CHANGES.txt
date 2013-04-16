@@ -1,3 +1,13 @@
+0.4
+===
+
+- Now use binary distribution on linux and osx by default. Mean that the recipe
+  no longer require gcc and the installation is way much faster.
+
+- Raise an error if a script does not exist
+
+- Use package version to get the node.js version to install
+
 0.3
 ===
 

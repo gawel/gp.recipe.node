@@ -1,45 +1,105 @@
 # -*- coding: utf-8 -*-
 """Recipe node"""
 import subprocess
+import logging
+import glob
+import sys
 import os
 
 
 class Recipe(object):
     """zc.buildout recipe"""
 
+    binary_format = 'http://nodejs.org/dist/v{v}/node-v{v}-{p}-{a}.tar.gz'
+    source_format = 'http://nodejs.org/dist/v{v}/node-v{v}.tar.gz'
+    version = '0.10.3'
+
     def __init__(self, buildout, name, options):
         self.buildout, self.name, self.options = buildout, name, options
-        if 'url' not in options:
-            options['url'] = 'http://nodejs.org/dist/node-v0.4.12.tar.gz'
+
+    def get_binary(self, options, name='node'):
+        node_binary = options.get('binary')
+        parts = self.buildout['buildout']['parts-directory']
+        if not node_binary:
+            for path in ((parts, 'buildout-node', 'bin', name),
+                         (parts, 'buildout-node', 'node-*', 'bin', name)):
+                binaries = glob.glob(os.path.join(*path))
+                if binaries:
+                    node_binary = binaries[0]
+        return node_binary
+
+    def get_version(self, options):
+        version = options.get('version')
+        if version:
+            return version
+        import pkg_resources
+        version = pkg_resources.get_distribution('gp.recipe.node').version
+        version = list(version.split('.'))[:-1]
+        return '.'.join(version)
 
     def install(self):
         """Installer"""
+        logger = logging.getLogger(self.name)
         options = self.options
         parts = self.buildout['buildout']['parts-directory']
-        name = options['url'].split('/')[-1].replace('.tar.gz', '')
+
+        name = 'buildout-node'
         node_dir = os.path.join(parts, self.name)
         if not os.path.isdir(node_dir):
             os.makedirs(node_dir)
-        node_binary = options.get('binary',
-                                  os.path.join(parts, name, 'bin', 'node'))
+
+        node_binary = self.get_binary(options)
+
+        if node_binary is None:
+            args = {}
+            if 'url' not in options:
+                args = dict(
+                    v=self.get_version(options),
+                    a='x86_64' in os.uname() and 'x64' or 'x86',
+                )
+                if sys.platform.startswith('linux'):
+                    args['p'] = 'linux'
+                elif sys.platform == 'darwin':
+                    args['p'] = 'darwin'
+
+            if 'p' in args:
+                options['url'] = url = self.binary_format.format(**args)
+                logger.info('Using binary distribution at %s', url)
+                import hexagonit.recipe.download
+                options['destination'] = os.path.join(
+                    self.buildout['buildout']['parts-directory'],
+                    name)
+                node = hexagonit.recipe.download.Recipe(self.buildout,
+                                                        name, options)
+                node.install()
+            else:
+                if 'url' not in options:
+                    options['url'] = url = self.source_format.format(**args)
+                logger.info('Using source distribution at %s', options['url'])
+                import zc.recipe.cmmi
+                options['environment'] = (
+                    'PYTHONPATH=tools:deps/v8/tools:../../deps/v8/tools'
+                )
+
+                # patch cmmi to set a correct PYTHONPATH
+                system_orig = zc.recipe.cmmi.system
+
+                def system(c):
+                    os.environ['PYTHONPATH'] = (
+                        '{0}/tools:{0}/deps/v8/tools'
+                    ).format(os.getcwd())
+                    system_orig(c)
+
+                zc.recipe.cmmi.system = system
+                node = zc.recipe.cmmi.Recipe(self.buildout, name, options)
+                node.install()
+
+                # restore cmmi
+                zc.recipe.cmmi.system = system_orig
+
+            node_binary = self.get_binary(options)
+
         node_bin = os.path.dirname(node_binary)
-
-        if not os.path.isfile(node_binary):
-            from zc.recipe.cmmi import Recipe as Cmmi
-            options['environment'] = 'PYTHONPATH=tools:deps/v8/tools'
-            node = Cmmi(self.buildout, name, options)
-            node.install()
-
-        options['on_install'] = 'true'
-        options['on_update'] = 'true'
-
-        if not os.path.isfile(os.path.join(node_bin, 'npm')):
-            p = subprocess.Popen((
-                'curl -sk https://npmjs.org/install.sh > install.sh&&'
-                'PATH=%s:$PATH '
-                'clean=yes sh install.sh&&rm install.sh') % (node_bin,),
-                shell=True)
-            p.wait()
 
         scripts = [script.strip() for script in options['scripts'].split()
                    if script.strip()]
@@ -70,8 +130,9 @@ class Recipe(object):
                     fd.write('\n'.join(data))
                     fd.close()
 
-        if 'node' not in scripts:
-            scripts.append('node')
+        for script in ('node', 'npm'):
+            if script not in scripts:
+                scripts.append(script)
 
         node_path = options.get('node-path', '').split()
         node_path.insert(0, os.path.join(node_dir, 'lib', 'node_modules'))
@@ -106,6 +167,7 @@ class Recipe(object):
             os.path.join(node_dir, 'bin'),
             node_bin,
         )
+        options['scripts'] = '\n'.join(scripts)
         options['entry-points'] = '\n'.join([
             '%s=gp.recipe.node.script:main' % s for s in scripts
         ])

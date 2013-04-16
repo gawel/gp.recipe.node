@@ -12,7 +12,7 @@ def read(*rnames):
     except:
         return ''
 
-version = '0.5'
+version = '0.10.3.1'
 
 long_description = (
     read('README.txt')
@@ -32,7 +32,7 @@ long_description = (
     + '\n' +
     read('CHANGES.txt')
     + '\n' +
-   'Download\n'
+    'Download\n'
     '********\n')
 
 entry_point = 'gp.recipe.node:Recipe'
@@ -47,11 +47,11 @@ setup(name='gp.recipe.node',
       # Get more strings from
       # http://pypi.python.org/pypi?:action=list_classifiers
       classifiers=[
-        'Framework :: Buildout',
-        'Intended Audience :: Developers',
-        'Topic :: Software Development :: Build Tools',
-        'License :: OSI Approved :: Zope Public License',
-        ],
+          'Framework :: Buildout',
+          'Intended Audience :: Developers',
+          'Topic :: Software Development :: Build Tools',
+          'License :: OSI Approved :: Zope Public License',
+      ],
       keywords='buildout node.js node',
       author='Gael Pasgrimaud',
       author_email='gael@gawel.org',
@@ -65,7 +65,7 @@ setup(name='gp.recipe.node',
                         'zc.buildout',
                         'zc.recipe.egg',
                         'zc.recipe.cmmi',
-                        'collective.recipe.cmd',
+                        'hexagonit.recipe.download',
                         ],
       tests_require=tests_require,
       extras_require=dict(tests=tests_require),

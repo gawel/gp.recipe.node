@@ -11,37 +11,25 @@ The recipe supports the following options:
    default value is if it is omitted.
 
 url
-    url used to get the node.js tarball
+    url to a node.js archive
+
+version
+    node.js version. Ignored if url is set. Default to recipe version.  Mean
+    that using ``recipe=gp.recipe.node==0.10.3.X`` will install ``node 0.10.3``
 
 npms
-    a list of package to install with npm
+    a list of package to install with npm. You can specify a package version by
+    using ``npmname@version``
 
 scripts
     a list of scripts
 
 node-path
-    a list of extra directory to add to NODE_PATH
+    a list of extra directory to add to ``NODE_PATH``
 
 
 Example usage
 =============
-
-.. Note to recipe author!
-   ----------------------
-   zc.buildout provides a nice testing environment which makes it
-   relatively easy to write doctests that both demonstrate the use of
-   the recipe and test it.
-   You can find examples of recipe doctests from the PyPI, e.g.
-   
-     http://pypi.python.org/pypi/zc.recipe.egg
-
-   The PyPI page for zc.buildout contains documentation about the test
-   environment.
-
-     http://pypi.python.org/pypi/zc.buildout#testing-support
-
-   Below is a skeleton doctest that you can start with when building
-   your own tests.
 
 We'll start by creating a buildout that uses the recipe::
 
@@ -58,7 +46,7 @@ We'll start by creating a buildout that uses the recipe::
 
 Running the buildout gives us::
 
-    >>> print 'start', system(buildout) 
+    >>> print 'start', system(buildout)
     start...
     Installing test1.
     ...
