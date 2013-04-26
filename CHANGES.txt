@@ -1,5 +1,5 @@
-0.4
-===
+0.10.5.1
+========
 
 - Now use binary distribution on linux and osx by default. Mean that the recipe
   no longer require gcc and the installation is way much faster.
