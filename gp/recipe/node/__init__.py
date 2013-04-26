@@ -12,7 +12,6 @@ class Recipe(object):
 
     binary_format = 'http://nodejs.org/dist/v{v}/node-v{v}-{p}-{a}.tar.gz'
     source_format = 'http://nodejs.org/dist/v{v}/node-v{v}.tar.gz'
-    version = '0.10.3'
 
     def __init__(self, buildout, name, options):
         self.buildout, self.name, self.options = buildout, name, options
@@ -111,8 +110,11 @@ class Recipe(object):
             p = subprocess.Popen((
                 'export HOME=%(node_dir)s;'
                 'export PATH=%(node_bin)s:$PATH;'
-                'echo "prefix=$HOME" > $HOME/.npmrc;'
-                '%(node_bin)s/npm install -g %(npms)s') % locals(), shell=True)
+                'echo "prefix=$HOME\n" > $HOME/.npmrc;'
+                '%(node_bin)s/npm set color false;'
+                '%(node_bin)s/npm set unicode false;'
+                '%(node_bin)s/npm install -sg %(npms)s') % locals(),
+                shell=True)
             p.wait()
 
             for script in scripts:
