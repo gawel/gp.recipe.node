@@ -23,6 +23,9 @@ npms =
     less
 scripts =
     lessc
+
+[node3]
+recipe = gp.recipe.node
 """
 
 
@@ -66,3 +69,8 @@ class TestNode(TestCase):
         output = subprocess.check_output(
             [os.path.join(self.wd, 'bin', 'lessc'), '-v'])
         self.assertTrue(output.startswith('lessc'))
+
+    def test_no_scripts(self):
+        output = self.callFTU('node3')
+        self.assertIn(os.path.join(self.wd, 'bin', 'node'), output)
+        self.assertIn(os.path.join(self.wd, 'bin', 'npm'), output)

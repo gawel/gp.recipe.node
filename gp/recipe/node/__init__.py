@@ -100,7 +100,8 @@ class Recipe(object):
 
         node_bin = os.path.dirname(node_binary)
 
-        scripts = [script.strip() for script in options['scripts'].split()
+        scripts = options.get('scripts', '').split()
+        scripts = [script.strip() for script in scripts
                    if script.strip()]
 
         npms = options.get('npms', '')
@@ -146,7 +147,8 @@ class Recipe(object):
         paths = [os.path.join(node_dir, 'bin'), node_bin]
         all_scripts = []
         for p in paths:
-            all_scripts.extend(os.listdir(p))
+            if os.path.isdir(p):
+                all_scripts.extend(os.listdir(p))
 
         typos = []
         for script in scripts:
