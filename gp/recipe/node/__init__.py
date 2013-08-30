@@ -80,12 +80,12 @@ class Recipe(object):
                 else:
                     filename = manager.download(url)[0]
                 
-                # Now, extract the file to the target directory
-                destination = os.path.join(self.buildout['buildout']['parts-directory'],name)
-
                 # The binary distribution urls are defined in this file, so we can safely
                 # assume they're gzipped tarballs.  This prevents an error when downloaded
                 # into a temporary file.
+                destination = os.path.join(self.buildout['buildout']['parts-directory'],name)
+
+                # Now, extract the file to the target directory.
                 extract(filename,destination,ext=".tar.gz")
             else:
                 if 'url' not in options:
