@@ -74,8 +74,8 @@ class Recipe(object):
                 
                 # The buildout download utility expects us to know whether or
                 # not we have a download cache, which causes fun errors.  This
-                # is probably a bug, but I'm already forking one package today.
-                if manager.download_cache is not None:
+                # is probably a bug, but this test should be safe regardless.
+                if not manager.download_cache:
                     filename = manager.download_cached(url)[0]
                 else:
                     filename = manager.download(url)[0]
