@@ -65,7 +65,6 @@ class Recipe(object):
                 options['url'] = url = self.binary_format.format(**args)
                 logger.info('Using binary distribution at %s', url)
                 
-                # Importing here for consistency
                 from zc.buildout.download import Download
                 from archive import extract
 
@@ -79,14 +78,17 @@ class Recipe(object):
                     filename = manager.download_cached(url)[0]
                 else:
                     filename = manager.download(url)[0]
-                
-                # The binary distribution urls are defined in this file, so we can safely
-                # assume they're gzipped tarballs.  This prevents an error when downloaded
-                # into a temporary file.
-                destination = os.path.join(self.buildout['buildout']['parts-directory'],name)
 
-                # Now, extract the file to the target directory.
+                destination = os.path.join(
+                                 self.buildout['buildout']['parts-directory'],
+                                 name)
+                
+                # Finally, extract the archive.  The binary distribution urls
+                # are defined in this file, so we can safely assume they're 
+                # gzipped tarballs.  This prevents an error when downloaded 
+                # into a temporary file.
                 extract(filename,destination,ext=".tar.gz")
+
             else:
                 if 'url' not in options:
                     options['url'] = url = self.source_format.format(**args)
