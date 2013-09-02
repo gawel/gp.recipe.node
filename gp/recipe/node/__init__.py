@@ -64,13 +64,31 @@ class Recipe(object):
             if 'p' in args:
                 options['url'] = url = self.binary_format.format(**args)
                 logger.info('Using binary distribution at %s', url)
-                import hexagonit.recipe.download
-                options['destination'] = os.path.join(
-                    self.buildout['buildout']['parts-directory'],
-                    name)
-                node = hexagonit.recipe.download.Recipe(self.buildout,
-                                                        name, options)
-                node.install()
+                
+                from zc.buildout.download import Download
+                from archive import extract
+
+                # Use the buildout download infrastructure
+                manager = Download(options=self.buildout['buildout'])
+                
+                # The buildout download utility expects us to know whether or
+                # not we have a download cache, which causes fun errors.  This
+                # is probably a bug, but this test should be safe regardless.
+                if not manager.download_cache:
+                    filename = manager.download_cached(url)[0]
+                else:
+                    filename = manager.download(url)[0]
+
+                destination = os.path.join(
+                                 self.buildout['buildout']['parts-directory'],
+                                 name)
+                
+                # Finally, extract the archive.  The binary distribution urls
+                # are defined in this file, so we can safely assume they're 
+                # gzipped tarballs.  This prevents an error when downloaded 
+                # into a temporary file.
+                extract(filename,destination,ext=".tar.gz")
+
             else:
                 if 'url' not in options:
                     options['url'] = url = self.source_format.format(**args)
