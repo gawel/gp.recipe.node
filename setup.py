@@ -12,7 +12,7 @@ def read(*rnames):
     except:
         return ''
 
-version = '0.10.8.1'
+version = '0.10.18.1'
 
 long_description = (
     read('README.txt')
@@ -57,7 +57,7 @@ setup(name='gp.recipe.node',
       author_email='gael@gawel.org',
       url='https://github.com/gawel/gp.recipe.node',
       license='ZPL',
-      packages=find_packages(exclude=['ez_setup']),
+      packages=find_packages(exclude=['ez_setup', 'update_node_version']),
       namespace_packages=['gp', 'gp.recipe'],
       include_package_data=True,
       zip_safe=False,
