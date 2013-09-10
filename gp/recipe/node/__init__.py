@@ -128,8 +128,6 @@ class Recipe(object):
             npms = ' '.join([npm.strip() for npm in npms.split()
                              if npm.strip()])
             
-            escaped_dir = shell_quote(node_dir)
-            
             p = subprocess.Popen((
                 'export HOME=%(node_dir)s;'
                 'export PATH=%(node_bin)s:$PATH;'
