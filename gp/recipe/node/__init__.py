@@ -5,6 +5,7 @@ import logging
 import glob
 import sys
 import os
+from pipes import quote as shell_quote
 
 
 class Recipe(object):
@@ -126,13 +127,16 @@ class Recipe(object):
         if npms:
             npms = ' '.join([npm.strip() for npm in npms.split()
                              if npm.strip()])
+            
             p = subprocess.Popen((
                 'export HOME=%(node_dir)s;'
                 'export PATH=%(node_bin)s:$PATH;'
                 'echo "prefix=$HOME\n" > $HOME/.npmrc;'
                 '%(node_bin)s/npm set color false;'
                 '%(node_bin)s/npm set unicode false;'
-                '%(node_bin)s/npm install -sg %(npms)s') % locals(),
+                '%(node_bin)s/npm install -sg %(npms)s') % {'node_dir':shell_quote(node_dir),
+                                                            'node_bin':shell_quote(node_bin),
+                                                            'npms':npms},
                 shell=True)
             p.wait()
 
