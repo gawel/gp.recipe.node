@@ -1,3 +1,8 @@
+0.10.18.2 (unreleased)
+======================
+
+- Fixes a failure installing npms when the buildout path contains spaces
+
 0.10.18.1
 =========
 
