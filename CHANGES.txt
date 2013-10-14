@@ -1,7 +1,9 @@
-0.10.18.3 (unreleased)
+0.10.20.1 (unreleased)
 ======================
 
-- Nothing changed yet.
+- Switch to 0.10.20
+
+- py3 compat
 
 
 0.10.18.2 (2013-09-13)
