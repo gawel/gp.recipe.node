@@ -1,7 +1,11 @@
-0.10.20.2 (unreleased)
+0.10.21.1 (unreleased)
 ======================
 
-- Nothing changed yet.
+- Switch to 0.10.21
+
+- Allow dev version
+
+- PEP8
 
 
 0.10.20.1 (2013-10-14)
