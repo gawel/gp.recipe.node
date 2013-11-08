@@ -34,7 +34,8 @@ class Recipe(object):
             return version
         import pkg_resources
         version = pkg_resources.get_distribution('gp.recipe.node').version
-        version = list(version.split('.'))[:-1]
+        version = list(version.split('.'))
+        version = [i for i in version if i.isdigit()][:-1]  # allow .dev0
         return '.'.join(version)
 
     def install(self):
@@ -65,13 +66,13 @@ class Recipe(object):
             if 'p' in args:
                 options['url'] = url = self.binary_format.format(**args)
                 logger.info('Using binary distribution at %s', url)
-                
+
                 from zc.buildout.download import Download
                 from archive import extract
 
                 # Use the buildout download infrastructure
                 manager = Download(options=self.buildout['buildout'])
-                
+
                 # The buildout download utility expects us to know whether or
                 # not we have a download cache, which causes fun errors.  This
                 # is probably a bug, but this test should be safe regardless.
@@ -81,14 +82,14 @@ class Recipe(object):
                     filename = manager.download(url)[0]
 
                 destination = os.path.join(
-                                 self.buildout['buildout']['parts-directory'],
-                                 name)
-                
+                    self.buildout['buildout']['parts-directory'],
+                    name)
+
                 # Finally, extract the archive.  The binary distribution urls
-                # are defined in this file, so we can safely assume they're 
-                # gzipped tarballs.  This prevents an error when downloaded 
+                # are defined in this file, so we can safely assume they're
+                # gzipped tarballs.  This prevents an error when downloaded
                 # into a temporary file.
-                extract(filename,destination,ext=".tar.gz")
+                extract(filename, destination, ext=".tar.gz")
 
             else:
                 if 'url' not in options:
@@ -99,7 +100,8 @@ class Recipe(object):
                     'PYTHONPATH=tools:deps/v8/tools:../../deps/v8/tools'
                 )
 
-                node = hexagonit.recipe.cmmi.Recipe(self.buildout, name, options)
+                node = hexagonit.recipe.cmmi.Recipe(
+                    self.buildout, name, options)
                 node.install()
 
             node_binary = self.get_binary(options)
@@ -114,16 +116,17 @@ class Recipe(object):
         if npms:
             npms = ' '.join([npm.strip() for npm in npms.split()
                              if npm.strip()])
-            
+
             p = subprocess.Popen((
                 'export HOME=%(node_dir)s;'
                 'export PATH=%(node_bin)s:$PATH;'
                 'echo "prefix=$HOME\n" > $HOME/.npmrc;'
                 '%(node_bin)s/npm set color false;'
                 '%(node_bin)s/npm set unicode false;'
-                '%(node_bin)s/npm install -sg %(npms)s') % {'node_dir':shell_quote(node_dir),
-                                                            'node_bin':shell_quote(node_bin),
-                                                            'npms':npms},
+                '%(node_bin)s/npm install -sg %(npms)s') % {
+                    'node_dir': shell_quote(node_dir),
+                    'node_bin': shell_quote(node_bin),
+                    'npms': npms},
                 shell=True)
             p.wait()
 
