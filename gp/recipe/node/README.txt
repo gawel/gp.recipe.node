@@ -15,14 +15,14 @@ url
 
 version
     node.js version. Ignored if url is set. Default to recipe version.  Mean
-    that using ``recipe=gp.recipe.node==0.10.3.X`` will install ``node 0.10.3``
+    that using ``recipe=gp.recipe.node==0.10.22.X`` will install ``node 0.10.22``
 
 npms
     a list of package to install with npm. You can specify a package version by
     using ``npmname@version``
 
 scripts
-    a list of scripts
+    a list of scripts (optional)
 
 node-path
     a list of extra directory to add to ``NODE_PATH``

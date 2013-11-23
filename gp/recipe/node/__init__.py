@@ -130,6 +130,9 @@ class Recipe(object):
                 shell=True)
             p.wait()
 
+            if not scripts:
+                scripts = os.listdir(os.path.join(node_dir, 'bin'))
+
             for script in scripts:
                 if script in ['node']:
                     continue

@@ -1,7 +1,9 @@
 0.10.21.2 (unreleased)
 ======================
 
-- Nothing changed yet.
+- Switch to 0.10.22
+
+- scripts option is no longer required
 
 
 0.10.21.1 (2013-11-08)
