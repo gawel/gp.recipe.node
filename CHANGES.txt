@@ -1,7 +1,7 @@
-0.10.24.1 (unreleased)
+0.10.26.0 (unreleased)
 ======================
 
-- Nothing changed yet.
+- Switch to 0.10.26
 
 
 0.10.24.0 (2013-12-26)
