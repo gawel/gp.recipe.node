@@ -8,4 +8,4 @@ install: python bootstrap.py; bin/buildout
 
 
 # command to run tests, e.g. python setup.py test
-script: ./bin/python setup.py test
+script: ./bin/nosetests -v
