@@ -41,16 +41,20 @@ recipe = gp.recipe.node
 relative-paths = true
 """
 
+
 class TestNode(TestCase):
 
     def setUp(self):
         self.pwd = os.path.abspath(os.getcwd())
         self.wd = tempfile.mkdtemp()
         os.environ['HOME'] = self.wd
-        self.addCleanup(shutil.rmtree, self.wd)
         self.buildout = os.path.join(self.pwd, 'bin', 'buildout')
         os.chdir(self.wd)
-        self.addCleanup(os.chdir, self.pwd)
+
+    def tearDown(self):
+        if hasattr(self, 'wd'):
+            shutil.rmtree(self.wd)
+        os.chdir(self.pwd)
 
     def callFTU(self, part):
         with open(os.path.join(self.wd, 'buildout.cfg'), 'w') as fd:
