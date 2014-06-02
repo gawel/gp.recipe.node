@@ -100,7 +100,6 @@ class TestNode(TestCase):
                 "os.environ[\"NODE_PATH\"] = join(base, 'parts",
                 content
             )
-                      "os.environ[\"NODE_PATH\"] = join(base, 'parts")
 
 
 class TestNodeClass(TestCase):
