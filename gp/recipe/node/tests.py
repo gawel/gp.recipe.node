@@ -6,7 +6,12 @@ import subprocess
 import zc.buildout.configparser
 from unittest import TestCase
 from gp.recipe.node import Recipe
-from StringIO import StringIO
+try:
+    # python 2
+    from StringIO import StringIO
+except:
+    # python 3
+    from io import StringIO
 from nose.tools import nottest
 
 BUILDOUT = """
@@ -91,6 +96,7 @@ class TestNode(TestCase):
                 "os.environ[\"NODE_PATH\"] = join(base, 'parts",
                 content
             )
+                      "os.environ[\"NODE_PATH\"] = join(base, 'parts")
 
 
 class TestNodeClass(TestCase):
