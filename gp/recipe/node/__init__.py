@@ -16,6 +16,7 @@ class Recipe(object):
 
     def __init__(self, buildout, name, options):
         self.buildout, self.name, self.options = buildout, name, options
+        self._use_relative_paths = self._determine_use_relative_paths()
 
     def get_binary(self, options, name='node'):
         node_binary = options.get('binary')
@@ -156,7 +157,7 @@ class Recipe(object):
         node_path.insert(0, os.path.join(node_dir, 'lib', 'node_modules'))
         node_path = ':'.join(node_path)
         options['initialization'] = (
-            'import os;\nos.environ["NODE_PATH"] = %r' % node_path
+            'import os;\nos.environ["NODE_PATH"] = %s' % self._get_path(node_path)
         )
 
         paths = [os.path.join(node_dir, 'bin'), node_bin]
@@ -181,10 +182,11 @@ class Recipe(object):
             ).format(typos, paths, all_scripts))
 
         options['eggs'] = 'gp.recipe.node'
-        options['arguments'] = '%r, (%r, %r), sys.argv[0]' % (
-            node_binary,
-            os.path.join(node_dir, 'bin'),
-            node_bin,
+        node_dir_bin = os.path.join(node_dir, 'bin')
+        options['arguments'] = '%s, (%s, %s), sys.argv[0]' % (
+            self._get_path(node_binary),
+            self._get_path(node_dir_bin),
+            self._get_path(node_bin),
         )
         options['scripts'] = '\n'.join(scripts)
         options['entry-points'] = '\n'.join([
@@ -196,3 +198,21 @@ class Recipe(object):
 
     def update(self):
         pass
+
+    def _to_relative(self, absolute_path):
+        """ convert an absolute path to a relative one """
+        path = absolute_path.replace(self.buildout['buildout']['directory'], '').lstrip(os.sep)
+        return "join(base, '{1}')".format(self.name, path)
+
+    def _get_path(self, absolute_path):
+        if self._use_relative_paths:
+            return self._to_relative(absolute_path)
+        else:
+            return "'{0}'".format(absolute_path)
+
+    def _determine_use_relative_paths(self):
+        # this mirrors behaviour in zc.recipe.egg
+        return self.options.get(
+            'relative-paths',
+            self.buildout['buildout'].get('relative-paths', 'false')
+            ) == 'true'
