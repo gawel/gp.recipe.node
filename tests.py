@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 import os
+import sys
 import shutil
 import tempfile
 import subprocess
 import zc.buildout.configparser
 from unittest import TestCase
+from unittest import skipIf
 from gp.recipe.node import Recipe
-try:
-    # python 2
-    from StringIO import StringIO
-except:
-    # python 3
-    from io import StringIO
+from io import StringIO
+
+PY3 = bool(sys.version_info[0] == 3)
 
 BUILDOUT = """
 [buildout]
@@ -76,6 +75,7 @@ class TestNode(TestCase):
         output = output.decode('utf8')
         self.assertTrue(output.startswith('lessc'))
 
+    @skipIf(not PY3, 'Compile only work with a py2 installed')
     def test_compile(self):
         output = self.callFTU('node2')
         self.assertIn(os.path.join(self.wd, 'bin', 'node'), output)
