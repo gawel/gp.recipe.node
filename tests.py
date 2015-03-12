@@ -48,6 +48,8 @@ class TestNode(TestCase):
         self.wd = tempfile.mkdtemp()
         os.environ['HOME'] = self.wd
         self.buildout = os.path.join(self.pwd, 'bin', 'buildout')
+        if not os.path.isfile(self.buildout):
+            self.buildout = 'buildout'
         os.chdir(self.wd)
 
     def tearDown(self):
