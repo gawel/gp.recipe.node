@@ -12,7 +12,6 @@ try:
 except:
     # python 3
     from io import StringIO
-from nose.tools import nottest
 
 BUILDOUT = """
 [buildout]
@@ -27,7 +26,7 @@ scripts =
 
 [node2]
 recipe = gp.recipe.node
-url = http://nodejs.org/dist/v0.10.4/node-v0.10.4.tar.gz
+url = http://nodejs.org/dist/v0.12.0/node-v0.12.0.tar.gz
 npms =
     less
 scripts =
@@ -61,6 +60,7 @@ class TestNode(TestCase):
             fd.write(BUILDOUT % self.pwd)
         cmd = [self.buildout, 'buildout:parts=' + part]
         output = subprocess.check_output(cmd)
+        output = output.decode('utf8')
         return output
 
     def test_binaries(self):
@@ -71,6 +71,7 @@ class TestNode(TestCase):
 
         output = subprocess.check_output(
             [os.path.join(self.wd, 'bin', 'lessc'), '-v'])
+        output = output.decode('utf8')
         self.assertTrue(output.startswith('lessc'))
 
     def test_compile(self):

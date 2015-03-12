@@ -1,9 +1,11 @@
 language: python
-python:
-  - "2.7"
-# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
-install: python bootstrap.py; bin/buildout
-
-
-# command to run tests, e.g. python setup.py test
-script: ./bin/nosetests -v
+install:
+  - pip install tox
+script:
+  - tox
+after_success:
+  - coveralls
+env:
+  - TOXENV=py27
+  - TOXENV=py33
+  - TOXENV=py34

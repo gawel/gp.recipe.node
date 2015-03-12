@@ -1,0 +1,25 @@
+[run]
+include =
+    */gp/recipe/node/*.py
+omit =
+    */tests*
+    */docs/conf.py
+    */examples/social*
+    */examples/mycrons*
+    */examples/mycommands*
+    */examples/myextends*
+    */examples/nickserv*
+    */examples/freenode*
+    */site-packages*
+    */lib/python*
+    */lib-python*
+    */lib_pypy*
+    */src*
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    def parse_args
