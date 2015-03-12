@@ -1,4 +1,4 @@
-0.12.0.1 (unreleased)
+0.12.0.0 (unreleased)
 ======================
 
 - Switch to 0.12.0
