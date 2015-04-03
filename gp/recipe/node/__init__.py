@@ -157,8 +157,8 @@ class Recipe(object):
         node_path.insert(0, os.path.join(node_dir, 'lib', 'node_modules'))
         node_path = ':'.join(node_path)
         options['initialization'] = (
-            'import os;\nos.environ["NODE_PATH"] = %s' % self._get_path(node_path)
-        )
+            'import os;\nos.environ["NODE_PATH"] = %s'
+        ) % self._get_path(node_path)
 
         paths = [os.path.join(node_dir, 'bin'), node_bin]
         all_scripts = []
@@ -201,7 +201,8 @@ class Recipe(object):
 
     def _to_relative(self, absolute_path):
         """ convert an absolute path to a relative one """
-        path = absolute_path.replace(self.buildout['buildout']['directory'], '').lstrip(os.sep)
+        path = absolute_path.replace(
+                self.buildout['buildout']['directory'], '').lstrip(os.sep)
         return "join(base, '{1}')".format(self.name, path)
 
     def _get_path(self, absolute_path):
