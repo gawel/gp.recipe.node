@@ -1,7 +1,11 @@
 0.12.3.3 (unreleased)
 =====================
 
-- Nothing changed yet.
+- allow to run non-node scripts (casperjs)
+
+- extend PATH to buildout related paths
+
+- extend NODE_PATH to module dependencies (allow to install .)
 
 
 0.12.3.2 (2015-05-21)
