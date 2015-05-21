@@ -15,7 +15,7 @@ except:
     # python 3
     from io import StringIO
 
-TRAVIS = 'TRAVIS_SECURE_ENV_VARS' in os.environ
+TRAVIS = os.path.isdir('/home/travis')
 PY3 = bool(sys.version_info[0] == 3)
 
 BUILDOUT = """
