@@ -211,9 +211,13 @@ class Recipe(object):
 
     def _to_relative(self, absolute_path):
         """ convert an absolute path to a relative one """
-        path = absolute_path.replace(
+        directory = self.buildout['buildout']['directory']
+        if directory in absolute_path:
+            path = absolute_path.replace(
                 self.buildout['buildout']['directory'], '').lstrip(os.sep)
-        return "join(base, '{1}')".format(self.name, path)
+            return "join(base, '{1}')".format(self.name, path)
+        else:
+            return "'{0}'".format(absolute_path)
 
     def _get_path(self, absolute_path):
         if self._use_relative_paths:
