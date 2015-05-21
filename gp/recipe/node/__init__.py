@@ -18,12 +18,24 @@ class Recipe(object):
         self.buildout, self.name, self.options = buildout, name, options
         self._use_relative_paths = self._determine_use_relative_paths()
 
+    def get_node_directory(self, options):
+        directory = self.options.get('node-directory')
+        if not directory:
+            directory = self.buildout['buildout'].get('node-directory')
+        if not directory:
+            directory = os.path.join(
+                self.buildout['buildout']['parts-directory'],
+                'buildout-node')
+        if not os.path.isdir(directory):
+            os.makedirs(directory)
+        return directory
+
     def get_binary(self, options, name='node'):
         node_binary = options.get('binary')
-        parts = self.buildout['buildout']['parts-directory']
+        directory = self.get_node_directory(options)
         if not node_binary:
-            for path in ((parts, 'buildout-node', 'bin', name),
-                         (parts, 'buildout-node', 'node-*', 'bin', name)):
+            for path in ((directory, 'bin', name),
+                         (directory, 'node-*', 'bin', name)):
                 binaries = glob.glob(os.path.join(*path))
                 if binaries:
                     node_binary = binaries[0]
@@ -82,9 +94,7 @@ class Recipe(object):
                 else:
                     filename = manager.download(url)[0]
 
-                destination = os.path.join(
-                    self.buildout['buildout']['parts-directory'],
-                    name)
+                destination = self.get_node_directory(options)
 
                 # Finally, extract the archive.  The binary distribution urls
                 # are defined in this file, so we can safely assume they're

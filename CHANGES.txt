@@ -1,8 +1,9 @@
-0.12.0.2 (unreleased)
+0.12.3.1 (unreleased)
 =====================
 
-- Nothing changed yet.
+- Allow to install node outside parts/ by specifying ``node-directory`` options
 
+- Switch to 0.12.3.1
 
 0.12.0.1 (2015-03-12)
 =====================
