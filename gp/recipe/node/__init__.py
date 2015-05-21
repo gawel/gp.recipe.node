@@ -106,12 +106,12 @@ class Recipe(object):
                 if 'url' not in options:
                     options['url'] = url = self.source_format.format(**args)
                 logger.info('Using source distribution at %s', options['url'])
-                import hexagonit.recipe.cmmi
+                import zc.recipe.cmmi
                 options['environment'] = (
                     'PYTHONPATH=tools:deps/v8/tools:../../deps/v8/tools'
                 )
 
-                node = hexagonit.recipe.cmmi.Recipe(
+                node = zc.recipe.cmmi.Recipe(
                     self.buildout, name, options)
                 node.install()
 

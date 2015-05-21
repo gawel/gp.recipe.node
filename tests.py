@@ -90,7 +90,7 @@ class TestNode(TestCase):
 
         output = subprocess.check_output(
             [os.path.join(self.wd, 'bin', 'node'), '-v'])
-        self.assertTrue(output.startswith('v0.10.4'))
+        assert 'v0.12.0' in output
         output = subprocess.check_output(
             [os.path.join(self.wd, 'bin', 'lessc'), '-v'])
         self.assertTrue(output.startswith('lessc'))
