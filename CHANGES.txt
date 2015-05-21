@@ -1,7 +1,7 @@
 0.12.3.2 (unreleased)
 =====================
 
-- Nothing changed yet.
+- Bugfix when using ``node-directory`` combined with ``relative-path``
 
 
 0.12.3.1 (2015-05-21)
