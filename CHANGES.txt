@@ -1,4 +1,4 @@
-0.12.3.2 (unreleased)
+0.12.3.2 (2015-05-21)
 =====================
 
 - Bugfix when using ``node-directory`` combined with ``relative-path``
