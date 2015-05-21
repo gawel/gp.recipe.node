@@ -81,7 +81,8 @@ class TestNode(TestCase):
         output = output.decode('utf8')
         self.assertTrue(output.startswith('lessc'))
 
-    @skipIf(TRAVIS or PY3, 'Compile only work with a py2 installed')
+    @skipIf(TRAVIS, 'Skip compile on travis')
+    @skipIf(PY3, 'Compile only work with a py2 installed')
     def test_compile(self):
         output = self.callFTU('node2')
         self.assertIn(os.path.join(self.wd, 'bin', 'node'), output)
