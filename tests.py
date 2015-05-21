@@ -106,10 +106,7 @@ class TestNode(TestCase):
         node_path = os.path.join(self.wd, 'bin', 'node')
         with open(node_path) as fd:
             content = fd.read()
-            self.assertIn(
-                "os.environ[\"NODE_PATH\"] = join(base, 'parts",
-                content
-            )
+            assert "NODE_PATH = [join(base, 'parts" in content
 
 
 class TestNodeClass(TestCase):

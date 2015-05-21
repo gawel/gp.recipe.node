@@ -119,45 +119,55 @@ class Recipe(object):
 
         node_bin = os.path.dirname(node_binary)
 
-        scripts = options.get('scripts', '').split()
-        scripts = [script.strip() for script in scripts
-                   if script.strip()]
-
         npms = options.get('npms', '')
         if npms:
             npms = ' '.join([npm.strip() for npm in npms.split()
                              if npm.strip()])
 
-            p = subprocess.Popen((
+            cmd = (
                 'export HOME=%(node_dir)s;'
                 'export PATH=%(node_bin)s:$PATH;'
                 'echo "prefix=$HOME\n" > $HOME/.npmrc;'
+                'echo "cache=%(cache)s\n" >> $HOME/.npmrc;'
                 '%(node_bin)s/npm set color false;'
                 '%(node_bin)s/npm set unicode false;'
-                '%(node_bin)s/npm install -sg %(npms)s') % {
+                '%(node_bin)s/npm install -g %(npms)s') % {
                     'node_dir': shell_quote(node_dir),
                     'node_bin': shell_quote(node_bin),
-                    'npms': npms},
-                shell=True)
+                    'cache': os.path.expanduser('~/.npm'),
+                    'npms': npms}
+            p = subprocess.Popen(cmd, shell=True)
             p.wait()
 
-            if not scripts:
-                scripts = os.listdir(os.path.join(node_dir, 'bin'))
+        return self.install_scripts()
 
-            for script in scripts:
-                if script in ['node']:
-                    continue
-                filename = os.path.join(node_bin, script)
-                if os.path.isfile(filename):
-                    fd = open(filename)
-                    data = fd.read()
-                    fd.close()
-                    fd = open(filename, 'w')
-                    fd.seek(0)
-                    data = data.split('\n')
-                    data[0] = '#!%s' % node_binary
-                    fd.write('\n'.join(data))
-                    fd.close()
+    def install_scripts(self):
+        options = self.options
+        node_binary = self.get_binary(options)
+        parts = self.buildout['buildout']['parts-directory']
+        node_dir = os.path.join(parts, self.name)
+        node_bin = os.path.dirname(node_binary)
+        scripts = options.get('scripts', '').split()
+        scripts = [script.strip() for script in scripts
+                   if script.strip()]
+
+        if not scripts and os.path.isdir(os.path.join(node_dir, 'bin')):
+            scripts = os.listdir(os.path.join(node_dir, 'bin'))
+
+        for script in scripts:
+            if script in ['node']:
+                continue
+            filename = os.path.join(node_bin, script)
+            if os.path.isfile(filename):
+                fd = open(filename)
+                data = fd.read()
+                fd.close()
+                fd = open(filename, 'w')
+                fd.seek(0)
+                data = data.split('\n')
+                data[0] = '#!%s' % node_binary
+                fd.write('\n'.join(data))
+                fd.close()
 
         for script in ('node', 'npm'):
             if script not in scripts:
@@ -165,10 +175,12 @@ class Recipe(object):
 
         node_path = options.get('node-path', '').split()
         node_path.insert(0, os.path.join(node_dir, 'lib', 'node_modules'))
-        node_path = ':'.join(node_path)
-        options['initialization'] = (
-            'import os;\nos.environ["NODE_PATH"] = %s'
-        ) % self._get_path(node_path)
+        node_path = [self._get_path(pth) for pth in node_path]
+        options['initialization'] = INITIALIZE % {
+            'node_path': ', '.join(node_path),
+            'node_dir_bin': self._get_path(os.path.join(node_dir, 'bin')),
+            'node_bin': self._get_path(node_bin),
+        }
 
         paths = [os.path.join(node_dir, 'bin'), node_bin]
         all_scripts = []
@@ -207,7 +219,7 @@ class Recipe(object):
         return rscripts.install()
 
     def update(self):
-        pass
+        return self.install_scripts()
 
     def _to_relative(self, absolute_path):
         """ convert an absolute path to a relative one """
@@ -231,3 +243,20 @@ class Recipe(object):
             'relative-paths',
             self.buildout['buildout'].get('relative-paths', 'false')
             ) == 'true'
+
+INITIALIZE = '''
+import os
+from glob import glob
+
+NODE_PATH = [%(node_path)s]
+NODE_PATH.extend(
+   glob(os.path.join(NODE_PATH[0], "*", "node_modules"))
+)
+os.environ["NODE_PATH"] = os.pathsep.join(NODE_PATH)
+
+os.environ["PATH"] = os.pathsep.join([
+    %(node_bin)s,
+    %(node_dir_bin)s,
+    os.environ["PATH"],
+])
+'''
