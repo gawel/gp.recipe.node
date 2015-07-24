@@ -11,8 +11,8 @@ from pipes import quote as shell_quote
 class Recipe(object):
     """zc.buildout recipe"""
 
-    binary_format = 'http://nodejs.org/dist/v{v}/node-v{v}-{p}-{a}.tar.gz'
-    source_format = 'http://nodejs.org/dist/v{v}/node-v{v}.tar.gz'
+    binary_format = 'https://nodejs.org/dist/v{v}/node-v{v}-{p}-{a}.tar.gz'
+    source_format = 'https://nodejs.org/dist/v{v}/node-v{v}.tar.gz'
 
     def __init__(self, buildout, name, options):
         self.buildout, self.name, self.options = buildout, name, options
