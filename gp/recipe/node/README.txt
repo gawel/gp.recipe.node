@@ -27,7 +27,7 @@ scripts
 node-path
     a list of extra directory to add to ``NODE_PATH``
 
-relaltive-paths
+relative-paths
     will generate paths relative to the root buildout directory.
     this is also honored if 'relative-paths' is in the main
     buildout section
