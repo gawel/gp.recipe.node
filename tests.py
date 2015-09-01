@@ -40,6 +40,10 @@ scripts =
 [node3]
 recipe = gp.recipe.node
 
+[node4]
+recipe = gp.recipe.node
+binary-url = https://nodejs.org/dist/v0.12.0/node-v0.12.0-{p}-{a}.tar.gz
+
 [relativepaths]
 recipe = gp.recipe.node
 relative-paths = true
@@ -98,6 +102,11 @@ class TestNode(TestCase):
 
     def test_no_scripts(self):
         output = self.callFTU('node3')
+        self.assertIn(os.path.join(self.wd, 'bin', 'node'), output)
+        self.assertIn(os.path.join(self.wd, 'bin', 'npm'), output)
+
+    def test_binary_url(self):
+        output = self.callFTU('node4')
         self.assertIn(os.path.join(self.wd, 'bin', 'node'), output)
         self.assertIn(os.path.join(self.wd, 'bin', 'npm'), output)
 

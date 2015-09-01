@@ -77,7 +77,8 @@ class Recipe(object):
                     args['p'] = 'darwin'
 
             if 'p' in args:
-                options['url'] = url = self.binary_format.format(**args)
+                binary_url = options.get('binary-url', self.binary_format)
+                options['url'] = url = binary_url.format(**args)
                 logger.info('Using binary distribution at %s', url)
 
                 from zc.buildout.download import Download
