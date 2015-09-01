@@ -13,7 +13,7 @@ def main():
         for line in fd:
             if line.startswith('version ='):
                 if version not in line:
-                    line = "version = '%s.1'\n" % version
+                    line = "version = '%s.1.dev0'\n" % version
             updated += line
 
     with open('setup.py', 'w') as fd:
