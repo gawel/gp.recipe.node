@@ -1,4 +1,4 @@
-0.12.3.4 (unreleased)
+0.12.7.1 (2015-09-01)
 =====================
 
 - allow to specify URL for binary node.js distribution (binary-url)
