@@ -1,7 +1,7 @@
 0.12.7.2 (unreleased)
 =====================
 
-- Nothing changed yet.
+- Add support for offline mode in Buildout (`-o`)
 
 
 0.12.7.1 (2015-09-01)
