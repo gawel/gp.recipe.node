@@ -5,6 +5,7 @@ import logging
 import glob
 import sys
 import os
+import json
 from pipes import quote as shell_quote
 
 
@@ -85,7 +86,8 @@ class Recipe(object):
                 from archive import extract
 
                 # Use the buildout download infrastructure
-                manager = Download(options=self.buildout['buildout'])
+                manager = Download(options=self.buildout['buildout'],
+                                   offline=self.buildout['buildout'].get('offline') == 'true')
 
                 # The buildout download utility expects us to know whether or
                 # not we have a download cache, which causes fun errors.  This
@@ -124,21 +126,42 @@ class Recipe(object):
         if npms:
             npms = ' '.join([npm.strip() for npm in npms.split()
                              if npm.strip()])
-
-            cmd = (
+            cmd_data = {'node_dir': shell_quote(node_dir),
+                        'node_bin': shell_quote(node_bin),
+                        'cache': os.path.expanduser('~/.npm'),
+                        'npms': npms}
+            cmd_prefix = (
                 'export HOME=%(node_dir)s;'
                 'export PATH=%(node_bin)s:$PATH;'
-                'echo "prefix=$HOME\n" > $HOME/.npmrc;'
-                'echo "cache=%(cache)s\n" >> $HOME/.npmrc;'
+                'echo "prefix=$HOME" > $HOME/.npmrc;'
+                'echo "cache=%(cache)s" >> $HOME/.npmrc;'
                 '%(node_bin)s/npm set color false;'
-                '%(node_bin)s/npm set unicode false;'
-                '%(node_bin)s/npm install -g %(npms)s') % {
-                    'node_dir': shell_quote(node_dir),
-                    'node_bin': shell_quote(node_bin),
-                    'cache': os.path.expanduser('~/.npm'),
-                    'npms': npms}
-            p = subprocess.Popen(cmd, shell=True)
-            p.wait()
+                '%(node_bin)s/npm set unicode false;') % cmd_data
+
+            if self.buildout['buildout'].get('offline') == 'true':
+                cmd = cmd_prefix + \
+                    '%(node_bin)s/npm ls %(npms)s --global --json' % cmd_data
+                import zc.buildout
+                try:
+                    output = subprocess.check_output(cmd, shell=True)
+                    output_json = json.loads(output)
+                    installed_npms = output_json.get('dependencies')
+                    # if npm reports a discrepancy, error out
+                    if not installed_npms or \
+                            len(installed_npms) != len(npms.split()):
+                        raise zc.buildout.UserError(
+                            "Couldn't install %r npms in offline mode" % npms)
+                    logger.debug('Using existing npm install for %r' % npms)
+                except subprocess.CalledProcessError:
+                    # npm fails if install has not yet happened
+                    raise zc.buildout.UserError(
+                        "Couldn't install %r npms in offline mode" % npms)
+
+            else:
+                cmd = cmd_prefix + \
+                    '%(node_bin)s/npm install -g %(npms)s' % cmd_data
+                p = subprocess.Popen(cmd, shell=True)
+                p.wait()
 
         return self.install_scripts()
 

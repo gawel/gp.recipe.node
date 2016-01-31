@@ -66,10 +66,12 @@ class TestNode(TestCase):
             shutil.rmtree(self.wd)
         os.chdir(self.pwd)
 
-    def callFTU(self, part):
+    def callFTU(self, part, offline=False):
         with open(os.path.join(self.wd, 'buildout.cfg'), 'w') as fd:
             fd.write(BUILDOUT % self.pwd)
         cmd = [self.buildout, 'buildout:parts=' + part]
+        if offline:
+            cmd.append('-o')
         output = subprocess.check_output(cmd)
         output = output.decode('utf8')
         return output
@@ -84,6 +86,20 @@ class TestNode(TestCase):
             [os.path.join(self.wd, 'bin', 'lessc'), '-v'])
         output = output.decode('utf8')
         self.assertTrue(output.startswith('lessc'))
+
+    def test_binaries_offline(self):
+        self.assertRaises(
+            subprocess.CalledProcessError, self.callFTU, 'node1',
+            offline=True)
+
+    def test_binaries_offline_after_install(self):
+        output = self.callFTU('node1')
+        self.assertIn(os.path.join(self.wd, 'bin', 'node'), output)
+        self.assertIn(os.path.join(self.wd, 'bin', 'less'), output)
+        self.assertIn(os.path.join(self.wd, 'bin', 'npm'), output)
+
+        output = self.callFTU('node1', offline=True)
+        self.assertIn('Updating node1', output)
 
     @skipIf(TRAVIS, 'Skip compile on travis')
     @skipIf(PY3, 'Compile only work with a py2 installed')
