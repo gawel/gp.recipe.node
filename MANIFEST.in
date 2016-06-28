@@ -1,3 +1,7 @@
 recursive-include gp *.txt
 include CONTRIBUTORS.txt
 include CHANGES.txt
+include *.py
+include .coveragerc
+include buildout.cfg
+include tox.ini
