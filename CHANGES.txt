@@ -3,6 +3,9 @@
 
 - Add support for offline mode in Buildout (`-o`)
 
+- Quote $PATH variable in order to fix problem when $PATH contains space
+  characters.
+
 
 0.12.7.1 (2015-09-01)
 =====================
