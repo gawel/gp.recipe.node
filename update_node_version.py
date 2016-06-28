@@ -5,8 +5,9 @@ import re
 
 
 def main():
-    page = urllib.urlopen('http://nodejs.org/download/').read()
-    version = re.search('v([0-9\.]+)', page).groups()[0]
+    page = urllib.urlopen('https://nodejs.org/en/download/releases/').read()
+    version = re.search('v([0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2})',
+                        page).groups()[0]
 
     updated = ''
     with open('setup.py') as fd:
