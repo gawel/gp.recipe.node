@@ -132,7 +132,7 @@ class Recipe(object):
                         'npms': npms}
             cmd_prefix = (
                 'export HOME=%(node_dir)s;'
-                'export PATH=%(node_bin)s:$PATH;'
+                'export PATH=%(node_bin)s:"$PATH";'
                 'echo "prefix=$HOME" > $HOME/.npmrc;'
                 'echo "cache=%(cache)s" >> $HOME/.npmrc;'
                 '%(node_bin)s/npm set color false;'
