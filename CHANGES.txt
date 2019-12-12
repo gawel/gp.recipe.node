@@ -1,7 +1,7 @@
 6.2.2.2 (unreleased)
 ====================
 
-- Nothing changed yet.
+- update to 13.x
 
 
 6.2.2.1 (2016-06-28)
