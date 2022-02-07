@@ -1,7 +1,7 @@
 13.3.0.2 (unreleased)
 =====================
 
-- Nothing changed yet.
+- Load 'arm64' version of node.js on M1/arm apple machines and others.
 
 
 13.3.0.1 (2019-12-12)

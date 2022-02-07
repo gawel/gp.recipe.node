@@ -68,9 +68,16 @@ class Recipe(object):
         if node_binary is None:
             args = {}
             if 'url' not in options:
+                uname = os.uname()
+                if 'x64' in uname:
+                    a = 'x64'
+                elif 'arm64' in uname:
+                    a = 'arm64'
+                else:
+                    a = 'x86'
                 args = dict(
                     v=self.get_version(options),
-                    a='x86_64' in os.uname() and 'x64' or 'x86',
+                    a=a,
                 )
                 if sys.platform.startswith('linux'):
                     args['p'] = 'linux'
