@@ -69,7 +69,7 @@ class Recipe(object):
             args = {}
             if 'url' not in options:
                 uname = os.uname()
-                if 'x64' in uname:
+                if 'x86_64' in uname:
                     a = 'x64'
                 elif 'arm64' in uname:
                     a = 'arm64'

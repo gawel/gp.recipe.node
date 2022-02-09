@@ -12,7 +12,7 @@ def read(*rnames):
     except:
         return ''
 
-version = '13.3.0.2.dev0'
+version = '16.13.2.1.dev0'
 
 long_description = (
     read('README.txt')
@@ -51,6 +51,11 @@ setup(name='gp.recipe.node',
           'Intended Audience :: Developers',
           'Topic :: Software Development :: Build Tools',
           'License :: OSI Approved :: Zope Public License',
+          'Programming Language :: Python :: 3.6',
+          'Programming Language :: Python :: 3.7',
+          'Programming Language :: Python :: 3.8',
+          'Programming Language :: Python :: 3.9',
+          'Programming Language :: Python :: 3.10',
       ],
       keywords='buildout node.js node',
       author='Gael Pasgrimaud',

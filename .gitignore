@@ -11,3 +11,5 @@ bin/
 eggs/
 develop-eggs/
 parts/
+
+.coverage
