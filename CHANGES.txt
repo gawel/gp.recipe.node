@@ -1,5 +1,9 @@
-13.3.0.2 (unreleased)
+16.13.2.2 (unreleased)
 =====================
+
+- update to 16.13.2
+
+- claim support for Python 3.6, 3.7, 3.8, 3.9, 3.10
 
 - Load 'arm64' version of node.js on M1/arm apple machines and others.
 
