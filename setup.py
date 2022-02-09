@@ -15,12 +15,12 @@ def read(*rnames):
 version = '16.13.2.1.dev0'
 
 long_description = (
-    read('README.txt')
+    read('README.rst')
     + '\n' +
     'Detailed Documentation\n'
     '**********************\n'
     + '\n' +
-    read('gp', 'recipe', 'node', 'README.txt')
+    read('gp', 'recipe', 'node', 'README.rst')
     + '\n' +
     'Contributors\n'
     '************\n'
@@ -30,7 +30,7 @@ long_description = (
     'Change history\n'
     '**************\n'
     + '\n' +
-    read('CHANGES.txt')
+    read('CHANGES.rst')
     + '\n' +
     'Download\n'
     '********\n')
@@ -51,6 +51,7 @@ setup(name='gp.recipe.node',
           'Intended Audience :: Developers',
           'Topic :: Software Development :: Build Tools',
           'License :: OSI Approved :: Zope Public License',
+          'Development Status :: 6 - Mature',
           'Programming Language :: Python :: 3.6',
           'Programming Language :: Python :: 3.7',
           'Programming Language :: Python :: 3.8',
