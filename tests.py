@@ -8,12 +8,7 @@ import zc.buildout.configparser
 from unittest import TestCase
 from unittest import skipIf
 from gp.recipe.node import Recipe
-try:
-    # python 2
-    from StringIO import StringIO
-except:
-    # python 3
-    from io import StringIO
+from io import StringIO
 
 TRAVIS = os.path.isdir('/home/travis')
 PY3 = bool(sys.version_info[0] == 3)
