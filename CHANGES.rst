@@ -1,7 +1,9 @@
-16.13.2.2 (unreleased)
+16.14.2.1 (unreleased)
 ======================
 
-- Nothing changed yet.
+- update to 16.14.2
+
+- stop testing for Python 3.6.
 
 
 16.13.2.1 (2022-02-09)

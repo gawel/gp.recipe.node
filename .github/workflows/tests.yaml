@@ -16,7 +16,6 @@ jobs:
       matrix:
         config:
         # [Python version, tox env]
-        - ["3.6",   "py36"]
         - ["3.7",   "py37"]
         - ["3.8",   "py38"]
         - ["3.9",   "py39"]
@@ -30,7 +29,7 @@ jobs:
       with:
         python-version: ${{ matrix.config[0] }}
     - name: Pip cache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('setup.*', 'tox.ini') }}

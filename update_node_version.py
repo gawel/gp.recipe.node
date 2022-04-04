@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import urllib
+from urllib.request import urlopen
 import re
 
 
 def main():
-    page = urllib.urlopen('https://nodejs.org/en/download/releases/').read()
-    version = re.search('v([0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2})',
+    page = urlopen('https://nodejs.org/en/download/releases/').read().decode()
+    version = re.search(r'v([0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2})',
                         page).groups()[0]
 
     updated = ''
@@ -14,7 +14,7 @@ def main():
         for line in fd:
             if line.startswith('version ='):
                 if version not in line:
-                    line = "version = '%s.1.dev0'\n" % version
+                    line = f"version = '{version}.1.dev0'\n"
             updated += line
 
     with open('setup.py', 'w') as fd:

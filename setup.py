@@ -12,7 +12,7 @@ def read(*rnames):
     except:
         return ''
 
-version = '16.13.2.2.dev0'
+version = '16.14.2.1.dev0'
 
 long_description = (
     read('README.rst')
@@ -52,7 +52,6 @@ setup(name='gp.recipe.node',
           'Topic :: Software Development :: Build Tools',
           'License :: OSI Approved :: Zope Public License',
           'Development Status :: 6 - Mature',
-          'Programming Language :: Python :: 3.6',
           'Programming Language :: Python :: 3.7',
           'Programming Language :: Python :: 3.8',
           'Programming Language :: Python :: 3.9',
@@ -71,7 +70,6 @@ setup(name='gp.recipe.node',
                         'zc.buildout',
                         'zc.recipe.egg',
                         'zc.recipe.cmmi',
-                        'python-archive',
                         ],
       tests_require=tests_require,
       extras_require=dict(tests=tests_require),

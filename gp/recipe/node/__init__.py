@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """Recipe node"""
-import subprocess
-import logging
 import glob
-import sys
-import os
 import json
+import logging
+import os
+import shutil
+import subprocess
+import sys
 from pipes import quote as shell_quote
 
 
@@ -90,7 +91,6 @@ class Recipe(object):
                 logger.info('Using binary distribution at %s', url)
 
                 from zc.buildout.download import Download
-                from archive import extract
 
                 # Use the buildout download infrastructure
                 manager = Download(options=self.buildout['buildout'],
@@ -110,7 +110,7 @@ class Recipe(object):
                 # are defined in this file, so we can safely assume they're
                 # gzipped tarballs.  This prevents an error when downloaded
                 # into a temporary file.
-                extract(filename, destination, ext=".tar.gz")
+                shutil.unpack_archive(filename, destination, format="gztar")
 
             else:
                 if 'url' not in options:
