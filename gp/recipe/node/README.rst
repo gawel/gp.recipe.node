@@ -28,7 +28,9 @@ version
 
 npms
     a list of package to install with npm. You can specify a package version by
-    using ``npmname@version``
+    using ``npmname@version``. In case you want to specify a ``package.json``
+    generated after a successfull first installation or update, you can 
+    add ``.`` to the list.
 
 scripts
     a list of scripts (optional)
@@ -54,7 +56,7 @@ We'll start by creating a buildout that uses the recipe::
     ...
     ... [test1]
     ... recipe = gp.recipe.node
-    ... npms = coffee-script less
+    ... npms = coffee-script less . 
     ... scripts = coffee lessc
     ... """)
 
