@@ -13,3 +13,4 @@ develop-eggs/
 parts/
 
 .coverage
+.tox
