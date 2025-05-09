@@ -37,7 +37,7 @@ recipe = gp.recipe.node
 
 [node4]
 recipe = gp.recipe.node
-binary-url = https://nodejs.org/dist/v0.12.0/node-v0.12.0-{p}-{a}.tar.gz
+binary-url = https://nodejs.org/dist/v24.0.1/node-v24.0.1-{p}-{a}.tar.gz
 
 [relativepaths]
 recipe = gp.recipe.node
