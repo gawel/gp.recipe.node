@@ -5,6 +5,9 @@
 
 - Drop support for no longer working ``python setup.py test`` command.
 
+- Drop support for ``pkg_resources`` namespace and replace it with PEP 420
+  native namespace.
+
 
 18.16.0.1 (2023-04-21)
 ======================
