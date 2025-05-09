@@ -71,8 +71,6 @@ setup(name='gp.recipe.node',
                         'zc.recipe.egg',
                         'zc.recipe.cmmi',
                         ],
-      tests_require=tests_require,
       extras_require=dict(tests=tests_require),
-      test_suite='gp.recipe.node.tests.test_docs.test_suite',
       entry_points=entry_points,
       )

@@ -3,6 +3,8 @@
 
 - Drop support for Python 3.7 and 3.8.
 
+- Drop support for no longer working ``python setup.py test`` command.
+
 
 18.16.0.1 (2023-04-21)
 ======================
