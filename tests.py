@@ -1,17 +1,13 @@
 # -*- coding: utf-8 -*-
 import os
-import sys
 import shutil
 import tempfile
 import subprocess
 import zc.buildout.configparser
 from unittest import TestCase
-from unittest import skipIf
 from gp.recipe.node import Recipe
 from io import StringIO
 
-TRAVIS = os.path.isdir('/home/travis')
-PY3 = bool(sys.version_info[0] == 3)
 
 BUILDOUT = """
 [buildout]
@@ -19,14 +15,6 @@ develop = %s
 
 [node1]
 recipe = gp.recipe.node
-npms =
-    less
-scripts =
-    lessc
-
-[node2]
-recipe = gp.recipe.node
-url = http://nodejs.org/dist/v0.12.0/node-v0.12.0.tar.gz
 npms =
     less
 scripts =
@@ -95,21 +83,6 @@ class TestNode(TestCase):
 
         output = self.callFTU('node1', offline=True)
         self.assertIn('Updating node1', output)
-
-    @skipIf(TRAVIS, 'Skip compile on travis')
-    @skipIf(PY3, 'Compile only work with a py2 installed')
-    def test_compile(self):
-        output = self.callFTU('node2')
-        self.assertIn(os.path.join(self.wd, 'bin', 'node'), output)
-        self.assertIn(os.path.join(self.wd, 'bin', 'less'), output)
-        self.assertIn(os.path.join(self.wd, 'bin', 'npm'), output)
-
-        output = subprocess.check_output(
-            [os.path.join(self.wd, 'bin', 'node'), '-v'])
-        assert 'v0.12.0' in output
-        output = subprocess.check_output(
-            [os.path.join(self.wd, 'bin', 'lessc'), '-v'])
-        self.assertTrue(output.startswith('lessc'))
 
     def test_no_scripts(self):
         output = self.callFTU('node3')
@@ -181,7 +154,7 @@ class TestNodeClass(TestCase):
 
         self.options['relative-paths'] = 'false'
         self.assertFalse(self.recipe._determine_use_relative_paths())
-        del(self.options['relative-paths'])
+        del self.options['relative-paths']
 
         self.buildout['buildout']['relative-paths'] = 'true'
         self.assertTrue(self.recipe._determine_use_relative_paths())

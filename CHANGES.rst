@@ -8,6 +8,8 @@
 - Drop support for ``pkg_resources`` namespace and replace it with PEP 420
   native namespace.
 
+- Remove Python 2 leftovers.
+
 
 18.16.0.1 (2023-04-21)
 ======================
