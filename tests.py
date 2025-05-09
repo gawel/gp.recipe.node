@@ -125,7 +125,7 @@ class TestNodeClass(TestCase):
         test_absolute_path = os.path.join(
             buildout_dir_path, test_suffix
         )
-        self.assertEquals(
+        self.assertEqual(
             self.recipe._to_relative(test_absolute_path),
             "join(base, '{0}')".format(test_suffix)
         )
