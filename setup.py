@@ -44,6 +44,7 @@ setup(name='gp.recipe.node',
       version=version,
       description="ZC Buildout recipe for node.js",
       long_description=long_description,
+      python_requires='>= 3.9',
       # Get more strings from
       # http://pypi.python.org/pypi?:action=list_classifiers
       classifiers=[
@@ -52,8 +53,6 @@ setup(name='gp.recipe.node',
           'Topic :: Software Development :: Build Tools',
           'License :: OSI Approved :: Zope Public License',
           'Development Status :: 6 - Mature',
-          'Programming Language :: Python :: 3.7',
-          'Programming Language :: Python :: 3.8',
           'Programming Language :: Python :: 3.9',
           'Programming Language :: Python :: 3.10',
           'Programming Language :: Python :: 3.11',
