@@ -1,7 +1,7 @@
 18.16.0.2 (unreleased)
 ======================
 
-- Nothing changed yet.
+- Drop support for Python 3.7 and 3.8.
 
 
 18.16.0.1 (2023-04-21)
