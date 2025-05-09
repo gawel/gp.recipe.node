@@ -3,7 +3,7 @@
 This module contains the tool of gp.recipe.node
 """
 import os
-from setuptools import setup, find_packages
+from setuptools import setup
 
 
 def read(*rnames):
@@ -20,7 +20,7 @@ long_description = (
     'Detailed Documentation\n'
     '**********************\n'
     + '\n' +
-    read('gp', 'recipe', 'node', 'README.rst')
+    read('src', 'gp', 'recipe', 'node', 'README.rst')
     + '\n' +
     'Contributors\n'
     '************\n'
@@ -62,8 +62,6 @@ setup(name='gp.recipe.node',
       author_email='gael@gawel.org',
       url='https://github.com/gawel/gp.recipe.node',
       license='ZPL',
-      packages=find_packages(exclude=['ez_setup', 'update_node_version']),
-      namespace_packages=['gp', 'gp.recipe'],
       include_package_data=True,
       zip_safe=False,
       install_requires=['setuptools',
