@@ -10,7 +10,7 @@
 
 - Remove Python 2 leftovers.
 
-- Add support for Python 3.12.
+- Add support for Python 3.12 and 3.13.
 
 
 18.16.0.1 (2023-04-21)
