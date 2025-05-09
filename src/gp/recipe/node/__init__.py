@@ -7,7 +7,7 @@ import os
 import shutil
 import subprocess
 import sys
-from pipes import quote as shell_quote
+from shlex import quote as shell_quote
 
 
 class Recipe(object):
