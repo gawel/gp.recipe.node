@@ -1,0 +1,36 @@
+# Generated from:
+# https://github.com/zopefoundation/meta/tree/master/config/buildout-recipe
+[meta]
+template = "buildout-recipe"
+commit-id = "d03bba5c"
+
+[python]
+with-sphinx-doctests = false
+with-docs = false
+with-future-python = false
+with-pypy = false
+with-macos = false
+with-windows = false
+
+[coverage]
+fail-under = 12
+
+[tox]
+testenv-commands-pre = [
+    "buildout install test"
+]
+testenv-commands = [
+    "bin/pytest -sx tests.py",
+]
+testenv-additional = [
+    "allowlist_externals = bin/pytest",
+]
+coverage-command = [
+    "coverage run {toxinidir}/bin/pytest -sx tests.py"
+]
+
+[manifest]
+additional-rules = [
+    "include *.py",
+    "recursive-include src *.rst",
+]

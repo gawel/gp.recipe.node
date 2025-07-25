@@ -1,7 +1,6 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from urllib.request import urlopen
 import re
+from urllib.request import urlopen
 
 
 def main():
@@ -19,6 +18,7 @@ def main():
 
     with open('setup.py', 'w') as fd:
         fd.write(updated)
+
 
 if __name__ == '__main__':
     main()

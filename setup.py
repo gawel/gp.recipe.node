@@ -1,16 +1,17 @@
-# -*- coding: utf-8 -*-
 """
 This module contains the tool of gp.recipe.node
 """
 import os
+
 from setuptools import setup
 
 
 def read(*rnames):
     try:
         return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
-    except:
+    except BaseException:
         return ''
+
 
 version = '18.16.0.2.dev0'
 
