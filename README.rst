@@ -1,6 +1,6 @@
-.. image:: https://img.shields.io/github/actions/workflow/status/gawel/gp.recipe.node/tests.yaml
+.. image:: https://github.com/gawel/gp.recipe.node/actions/workflows/tests.yml/badge.svg
    :alt: GitHub Workflow Status
-   :target: https://github.com/gawel/gp.recipe.node/actions/workflows/tests.yaml
+   :target: https://github.com/gawel/gp.recipe.node/actions/workflows/tests.yml
 .. image:: https://img.shields.io/pypi/v/gp.recipe.node.svg
    :target: https://crate.io/packages/gp.recipe.node/
 .. image:: https://img.shields.io/pypi/dm/gp.recipe.node.svg
