@@ -1,5 +1,7 @@
-18.16.0.2 (unreleased)
+22.17.1.1 (unreleased)
 ======================
+
+- Update to node 22.17.1.
 
 - Drop support for Python 3.7 and 3.8.
 
