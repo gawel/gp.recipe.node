@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Recipe node"""
 import glob
 import json
@@ -10,7 +9,7 @@ import sys
 from shlex import quote as shell_quote
 
 
-class Recipe(object):
+class Recipe:
     """zc.buildout recipe"""
 
     binary_format = 'https://nodejs.org/dist/v{v}/node-v{v}-{p}-{a}.tar.gz'
@@ -93,8 +92,9 @@ class Recipe(object):
                 from zc.buildout.download import Download
 
                 # Use the buildout download infrastructure
-                manager = Download(options=self.buildout['buildout'],
-                                   offline=self.buildout['buildout'].get('offline') == 'true')
+                manager = Download(
+                    options=self.buildout['buildout'],
+                    offline=self.buildout['buildout'].get('offline') == 'true')
 
                 # The buildout download utility expects us to know whether or
                 # not we have a download cache, which causes fun errors.  This
@@ -236,7 +236,7 @@ class Recipe(object):
 
         options['eggs'] = 'gp.recipe.node'
         node_dir_bin = os.path.join(node_dir, 'bin')
-        options['arguments'] = '%s, (%s, %s), sys.argv[0]' % (
+        options['arguments'] = '{}, ({}, {}), sys.argv[0]'.format(
             self._get_path(node_binary),
             self._get_path(node_dir_bin),
             self._get_path(node_bin),
@@ -258,22 +258,23 @@ class Recipe(object):
         if directory in absolute_path:
             path = absolute_path.replace(
                 self.buildout['buildout']['directory'], '').lstrip(os.sep)
-            return "join(base, '{1}')".format(self.name, path)
+            return f"join(base, '{path}')"
         else:
-            return "'{0}'".format(absolute_path)
+            return f"'{absolute_path}'"
 
     def _get_path(self, absolute_path):
         if self._use_relative_paths:
             return self._to_relative(absolute_path)
         else:
-            return "'{0}'".format(absolute_path)
+            return f"'{absolute_path}'"
 
     def _determine_use_relative_paths(self):
         # this mirrors behaviour in zc.recipe.egg
         return self.options.get(
             'relative-paths',
             self.buildout['buildout'].get('relative-paths', 'false')
-            ) == 'true'
+        ) == 'true'
+
 
 INITIALIZE = '''
 import os

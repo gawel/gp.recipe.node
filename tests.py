@@ -1,12 +1,13 @@
-# -*- coding: utf-8 -*-
 import os
 import shutil
-import tempfile
 import subprocess
-import zc.buildout.configparser
-from unittest import TestCase
-from gp.recipe.node import Recipe
+import tempfile
 from io import StringIO
+from unittest import TestCase
+
+import zc.buildout.configparser
+
+from gp.recipe.node import Recipe
 
 
 BUILDOUT = """
@@ -127,7 +128,7 @@ class TestNodeClass(TestCase):
         )
         self.assertEqual(
             self.recipe._to_relative(test_absolute_path),
-            "join(base, '{0}')".format(test_suffix)
+            f"join(base, '{test_suffix}')"
         )
 
     def test_get_path(self):
@@ -141,12 +142,14 @@ class TestNodeClass(TestCase):
             buildout_dir_path, 'parts', 'node', 'bin', 'node'
         )
         self.recipe._use_relative_paths = True
-        self.assertTrue(
-            'join(base' in self.recipe._get_path(absolute_path)
+        self.assertIn(
+            'join(base',
+            self.recipe._get_path(absolute_path)
         )
         self.recipe._use_relative_paths = False
-        self.assertFalse(
-            'join(base' in self.recipe._get_path(absolute_path)
+        self.assertNotIn(
+            'join(base',
+            self.recipe._get_path(absolute_path)
         )
 
     def test_determine_use_relative_paths(self):

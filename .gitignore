@@ -1,16 +1,32 @@
-.npmrc
-node_modules
-
-# python files
-*.pyc
+# Generated from:
+# https://github.com/zopefoundation/meta/tree/master/config/buildout-recipe
+*.dll
 *.egg-info/
-
-# buildout files
-.installed.cfg
-bin/
-eggs/
-develop-eggs/
-parts/
-
+*.profraw
+*.pyc
+*.pyo
+*.so
 .coverage
-.tox
+.coverage.*
+.eggs/
+.installed.cfg
+.mr.developer.cfg
+.tox/
+.vscode/
+__pycache__/
+bin/
+build/
+coverage.xml
+develop-eggs/
+develop/
+dist/
+docs/_build
+eggs/
+etc/
+lib/
+lib64
+log/
+parts/
+pyvenv.cfg
+testing.log
+var/
